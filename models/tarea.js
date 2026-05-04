@@ -4,8 +4,8 @@ const tareaSchema = new Schema({
   descripcion: {
     type: String,
     required: true,
-    minLength: 10,
-    maxLength: 1000,
+    minlength: [10, "La descripción debe tener mínimo 10 caracteres"],
+    maxlength: [1000, "La descripción no debe exceder 1000 caracteres"],
   },
   abogado: {
     type: mongoose.Schema.Types.ObjectId,
@@ -22,15 +22,15 @@ const tareaSchema = new Schema({
     type: Date,
     required: true,
   },
-  prioridad:{
+  prioridad: {
     type: String,
     required: true,
     enum: ["alta", "media", "baja"],
   },
-  estado:{
-    type:String,
-    required:true,
-    enum:["Pendiente", "Proceso", "Completada", "Cancelada", "Reprogramada"],
+  estado: {
+    type: String,
+    required: true,
+    enum: ["Pendiente", "Proceso", "Completada", "Cancelada", "Reprogramada"],
   }
 });
 

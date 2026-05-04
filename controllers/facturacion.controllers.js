@@ -6,7 +6,7 @@ import fs from "fs";
 export const crearFacturacion = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ mensaje: "Debe subir un archivo" });
+      return res.status(400).json({ message: "Debe subir un archivo" });
     }
     const resultado = await cloudinary.uploader.upload(req.file.path, {
       resource_type: "auto",
@@ -32,14 +32,14 @@ export const crearFacturacion = async (req, res) => {
       fecha: facturacionNuevo.fecha.toISOString().split('T')[0].replace(/-/g, '/')
     };
     res.status(201).json({
-      mensaje: "Facturación fue subida con éxito",
+      message: "Facturación fue subida con éxito",
       archivo: facturaFormateada,
     });
   } catch (error) {
     console.error(error);
     res
       .status(500)
-      .json({ mensaje: "Error en el servidor al crear facturación" });
+      .json({ message: "Error en el servidor al crear facturación" });
   }
 };
 //get
@@ -69,7 +69,7 @@ export const listaFacturacion = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      mensaje: "Error al obtener las facturas",
+      message: "Error al obtener las facturas",
     });
   }
 };
@@ -80,7 +80,7 @@ export const obtenerFacturacionPorId = async (req, res) => {
     const obtenerFacturacionPorId = await Facturacion.findById(req.params.id);
     if (!obtenerFacturacionPorId) {
       return res.status(404).json({
-        mensaje: "La facturacion con ese ID no existe",
+        message: "La facturacion con ese ID no existe",
       });
     }
     const facturaFormateada = {
@@ -91,7 +91,7 @@ export const obtenerFacturacionPorId = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      mensaje: "La facturacion el archivo por ID",
+      message: "Error al obtener la facturación por ID",
     });
   }
 };
@@ -104,22 +104,22 @@ export const eliminarFacturacion = async (req, res) => {
     );
     if (!facturacionBorrado) {
       return res.status(404).json({
-        mensaje: "La factura con ese ID no existe",
+        message: "La factura con ese ID no existe",
       });
     }
     await cloudinary.uploader.destroy(
       facturacionBorrado.seleccionarArchivo.public_id,
       {
-        resource_type: "raw",
+        resource_type: "auto",
       }
     );
     res.status(200).json({
-      mensaje: "La factura fue eliminada con exito",
+      message: "La factura fue eliminada con exito",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      mensaje: "Error al borrar la factura por ID",
+      message: "Error al borrar la factura por ID",
     });
   }
 };
@@ -129,7 +129,7 @@ export const editarFacturacion = async (req, res) => {
   try {
     const facturaActual = await Facturacion.findById(req.params.id);
     if (!facturaActual) {
-      return res.status(404).json({ mensaje: "Factura no encontrada" });
+      return res.status(404).json({ message: "Factura no encontrada" });
     }
     let updateData = req.body;
     if (req.file) {
@@ -145,7 +145,7 @@ export const editarFacturacion = async (req, res) => {
         await cloudinary.uploader.destroy(
           facturaActual.seleccionarArchivo.public_id,
           {
-            resource_type: "raw",
+            resource_type: "auto",
           }
         );
       }
@@ -158,7 +158,7 @@ export const editarFacturacion = async (req, res) => {
     const facturacionEditado = await Facturacion.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new: true }
+      { new: true, runValidators: true }
     );
     const archivoFormateado = {
       ...facturacionEditado.toObject(),
@@ -170,7 +170,7 @@ export const editarFacturacion = async (req, res) => {
     res
       .status(200)
       .json({
-        mensaje: "Facturación actualizada con éxito",
+        message: "Facturación actualizada con éxito",
         factura: facturacionEditado,
       });
   } catch (error) {
@@ -179,7 +179,7 @@ export const editarFacturacion = async (req, res) => {
     res
       .status(400)
       .json({
-        mensaje: "Error al actualizar factura",
+        message: "Error al actualizar factura",
       });
   }
 };
@@ -190,12 +190,12 @@ export const descargarFacturacion = async (req, res) => {
     if (!factura) {
       return res
         .status(404)
-        .json({ mensaje: "La factura con ese ID no existe" });
+        .json({ message: "La factura con ese ID no existe" });
     }
     const urlDescarga = factura.seleccionarArchivo.url + "?fl_attachment";
     res.redirect(urlDescarga);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: "Error al descargar la factura" });
+    res.status(500).json({ message: "Error al descargar la factura" });
   }
 };

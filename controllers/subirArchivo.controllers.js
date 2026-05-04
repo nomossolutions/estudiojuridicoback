@@ -6,10 +6,10 @@ import fs from "fs";
 export const crearSubirArchivo = async (req, res) => {
   try {
      if (!req.file) {
-      return res.status(400).json({ mensaje: "Debe subir un archivo" });
+      return res.status(400).json({ message: "Debe subir un archivo" });
     }
     const resultado = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "image",
+      resource_type: "auto",
       folder: "archivos_pdf",
       pages: true,
     });
@@ -32,13 +32,13 @@ export const crearSubirArchivo = async (req, res) => {
       fecha: archivoNuevo.fecha.toISOString().split('T')[0].replace(/-/g, '/')
     };
     res.status(201).json({
-      mensaje: "El archivo fue subido con éxito",
+      message: "El archivo fue subido con éxito",
       archivo: archivoFormateado,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      mensaje: "Error en el servidor al subir el archivo",
+      message: "Error en el servidor al subir el archivo",
     });
   }
 };
@@ -70,7 +70,7 @@ export const listaSubirArchivo = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      mensaje: "Error al obtener los Archivos",
+      message: "Error al obtener los Archivos",
     });
   }
 };
@@ -81,7 +81,7 @@ export const obtenerSubirArchivoPorId = async (req, res) => {
     const obtenerSubirArchivoPorId = await SubirArchivo.findById(req.params.id);
     if (!obtenerSubirArchivoPorId) {
       return res.status(404).json({
-        mensaje: "El archivo con ese ID no existe",
+        message: "El archivo con ese ID no existe",
       });
     }
     const archivoFormateado = {
@@ -92,7 +92,7 @@ export const obtenerSubirArchivoPorId = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      mensaje: "Error al obtener el archivo por ID",
+      message: "Error al obtener el archivo por ID",
     });
   }
 };
@@ -103,23 +103,23 @@ export const eliminarSubirArchivo = async (req, res) => {
     const ArchivoBorrado = await SubirArchivo.findByIdAndDelete(req.params.id);
     if (!ArchivoBorrado) {
       return res.status(404).json({
-        mensaje: "El archivo con ese ID no existe",
+        message: "El archivo con ese ID no existe",
       });
     }
     await cloudinary.uploader.destroy(
       ArchivoBorrado.seleccionarArchivo.public_id,
       {
-        resource_type: "image",
+        resource_type: "auto",
       }
     );
 
     res.status(200).json({
-      mensaje: "archivo eliminado con exito",
+      message: "archivo eliminado con exito",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      mensaje: "Error al borrar el archivo por ID",
+      message: "Error al borrar el archivo por ID",
     });
   }
 };
@@ -131,7 +131,7 @@ export const editarSubirArchivo = async (req, res) => {
     const archivoExistente = await SubirArchivo.findById(req.params.id);
     if (!archivoExistente) {
       return res.status(404).json({
-        mensaje: "El archivo con ese ID no existe",
+        message: "El archivo con ese ID no existe",
       });
     }
 
@@ -139,7 +139,7 @@ export const editarSubirArchivo = async (req, res) => {
 
     if (req.file) {
       const resultado = await cloudinary.uploader.upload(req.file.path, {
-        resource_type: "image",
+        resource_type: "auto",
         folder: "archivos_pdf",
         pages: true,
       });
@@ -149,7 +149,7 @@ export const editarSubirArchivo = async (req, res) => {
       
       if (archivoExistente.seleccionarArchivo && archivoExistente.seleccionarArchivo.public_id) {
         await cloudinary.uploader.destroy(archivoExistente.seleccionarArchivo.public_id, {
-          resource_type: "image",
+          resource_type: "auto",
         });
       }
       updateData.seleccionarArchivo = {
@@ -162,7 +162,7 @@ export const editarSubirArchivo = async (req, res) => {
     const ArchivoEditado = await SubirArchivo.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     const archivoFormateado = {
@@ -170,13 +170,13 @@ export const editarSubirArchivo = async (req, res) => {
       fecha: ArchivoEditado.fecha.toISOString().split('T')[0].replace(/-/g, '/')
     };
     res.status(200).json({
-      mensaje: "Archivo actualizado con exito",
+      message: "Archivo actualizado con exito",
       archivo: archivoFormateado,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      mensaje: "Error al actualizar el archivo por ID",
+      message: "Error al actualizar el archivo por ID",
     });
   }
 };
@@ -187,7 +187,7 @@ export const descargarSubirArchivo = async (req, res) => {
     const archivo = await SubirArchivo.findById(req.params.id);
     if (!archivo) {
       return res.status(404).json({
-        mensaje: "El archivo con ese ID no existe",
+        message: "El archivo con ese ID no existe",
       });
     }
 
@@ -196,7 +196,7 @@ export const descargarSubirArchivo = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      mensaje: "Error al descargar el archivo",
+      message: "Error al descargar el archivo",
     });
   }
 };

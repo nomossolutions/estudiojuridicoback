@@ -5,6 +5,11 @@ import Tarea from "../models/tarea.js";
 import mongoose from "mongoose";
 
 const validacionTarea = [
+  body("descripcion")
+    .notEmpty()
+    .withMessage("La descripción de la tarea es obligatoria")
+    .isLength({ min: 10, max: 1000 })
+    .withMessage("La descripción debe tener entre 10 y 1000 caracteres"),
   body("abogado")
     .notEmpty()
     .withMessage("El responsable es obligatorio")
@@ -33,7 +38,6 @@ const validacionTarea = [
       }
       return true;
     }),
-  ,
   body("prioridad")
     .notEmpty()
     .withMessage("La prioridad de la tarea es obligatoria")
@@ -42,21 +46,7 @@ const validacionTarea = [
     .notEmpty()
     .withMessage("El estado de la tarea es obligatoria")
     .isIn(["Pendiente", "Proceso", "Completada", "Cancelada", "Reprogramada"])
-    .custom(async (valor, { req }) => {
-      const { abogado, fecha, prioridad, estado } = req.body;
-      const tareaExistente = await Tarea.findOne({
-        descripcion: valor,
-        abogado,
-        fecha,
-        prioridad,
-        estado,
-        _id: { $ne: req.params.id },
-      });
-      if (tareaExistente) {
-        throw new Error("Ya existe una tarea con los mismos datos");
-      }
-      return true;
-    }),
+    .withMessage("El estado debe ser uno de: Pendiente, Proceso, Completada, Cancelada, Reprogramada"),
 
   (req, res, next) => resultadoValidacion(req, res, next),
 ];

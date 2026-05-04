@@ -6,7 +6,8 @@ const validacionCliente = [
   body("nombre")
     .notEmpty()
     .withMessage("El nombre del cliente es obligatorio")
-    .isLength({ min: 4, max: 30 }),
+    .isLength({ min: 10, max: 30 })
+    .withMessage("El nombre del cliente debe tener entre 10 y 30 caracteres"),
   body("identificador")
     .notEmpty()
     .withMessage("El dni o cuil del cliente es obligatorio")

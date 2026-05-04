@@ -1,7 +1,7 @@
 import { body } from "express-validator";
 import resultadoValidacion from "./resultadoValidacion.js";
 
-const validarSubirArchivos = [
+const validarSubirArchivo = [
   body("nombreCliente")
     .notEmpty()
     .withMessage("El nombre del cliente es obligatorio")
@@ -27,4 +27,4 @@ const validarSubirArchivos = [
   (req, res, next) => resultadoValidacion(req, res, next),
 ];
 
-export default validarSubirArchivos;
+export default validarSubirArchivo;

@@ -4,9 +4,9 @@ import resultadoValidacion from "./resultadoValidacion.js";
 const validacionJuicio = [
     body("nombreCliente")
         .notEmpty()
-        .withMessage("El nombre del usuario es obligatorio")
+        .withMessage("El nombre del cliente es obligatorio")
         .isLength({ min: 4, max: 30 })
-        .withMessage("El nombre del usuario debe tener entre 4 y 30 caracteres"),
+        .withMessage("El nombre del cliente debe tener entre 4 y 30 caracteres"),
 
     body("nombreDeJuicio")
         .notEmpty()
@@ -33,6 +33,9 @@ const validacionJuicio = [
         .withMessage("La fecha de la cita es obligatoria")
         .custom((valor) => {
             const fecha = new Date(valor);
+            if (isNaN(fecha)) {
+                throw new Error("La fecha no es válida");
+            }
             const day = fecha.getDay();
             if (day < 1 || day > 5) {
                 throw new Error(

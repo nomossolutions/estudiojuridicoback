@@ -12,7 +12,7 @@ export const crearCliente = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            mensaje: "Error en el servidor al crear el cliente",
+            message: "Error en el servidor al crear el cliente",
         });
     }
 };
@@ -45,7 +45,7 @@ export const obtenerClientes = async (req, res) => {
     catch (error) {
         console.log(error);
         res.status(500).json({
-            mensaje: "Error al obtener la lista de clientes"
+            message: "Error al obtener la lista de clientes"
         });
     };
 };
@@ -57,14 +57,22 @@ export const obtenerClientes = async (req, res) => {
             const listarClientePorId = await Cliente.findById(req.params.id);
             if (!listarClientePorId) {
                 return res.status(404).json({
-                    mensaje: "El cliente con ese ID no existe"
+                    message: "El cliente con ese ID no existe"
                 });
             }
-            res.status(200).json(listarClientePorId);
+            const clienteTransformado = {
+                _id: listarClientePorId._id,
+                nombre: listarClientePorId.nombre,
+                identificador: listarClientePorId.identificador,
+                email: listarClientePorId.email,
+                telefono: listarClientePorId.telefono,
+                estadoCliente: listarClientePorId.estadoCliente,
+            };
+            res.status(200).json(clienteTransformado);
         } catch (error) {
             console.log(error);
             res.status(500).json({
-                mensaje: "Error al obtener el cliente por ID"
+                message: "Error al obtener el cliente por ID"
             })
         }
     };
@@ -75,16 +83,16 @@ export const obtenerClientes = async (req, res) => {
             const clienteBorrado = await Cliente.findByIdAndDelete(req.params.id);
             if (!clienteBorrado) {
                 return res.status(404).json({
-                    mensaje: "El cliente con ese ID no existe"
+                    message: "El cliente con ese ID no existe"
                 })
             }
             res.status(200).json({
-                mensaje: "Cliente eliminado con exito"
+                message: "Cliente eliminado con exito"
             });
         } catch (error) {
             console.log(error);
             res.status(500).json({
-                mensaje: "Error al borrar el cliente por ID"
+                message: "Error al borrar el cliente por ID"
             })
         }
     };
@@ -93,10 +101,10 @@ export const obtenerClientes = async (req, res) => {
 
     export const editarCliente = async (req, res) => {
         try {
-            const clienteEditado = await Cliente.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const clienteEditado = await Cliente.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
             if (!clienteEditado) {
                 return res.status(400).json({
-                    mensaje: "El cliente con ese ID no existe"
+                    message: "El cliente con ese ID no existe"
                 })
             };
             res.status(200).json(
@@ -105,7 +113,7 @@ export const obtenerClientes = async (req, res) => {
         } catch (error) {
             console.log(error);
             res.status(500).json({
-                mensaje: "Error al actualizar el cliente por ID"
+                message: "Error al actualizar el cliente por ID"
             });
         }
     };

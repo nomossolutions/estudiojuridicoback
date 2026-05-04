@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 
-const verficarJWT = (req, res, next) =>{
+const verificarJWT = (req, res, next) =>{
     try{
         const token = req.headers["x-token"];
         if(!token){
@@ -17,4 +17,4 @@ const verficarJWT = (req, res, next) =>{
     }
 }
 
-export default verficarJWT;
+export default verificarJWT;

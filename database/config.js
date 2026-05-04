@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const uri = process.env.MONGODB;
+const uri = process.env.MONGODB_CNN;
 
 if (!uri) {
-  throw new Error("La variable MONGODB no está definida en el archivo .env");
+  throw new Error("La variable MONGODB_CNN no está definida en el archivo .env");
 }
 
 mongoose.connect(uri)

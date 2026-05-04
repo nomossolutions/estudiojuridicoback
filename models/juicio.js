@@ -41,11 +41,11 @@ const juicioSchema = new Schema({
         }
     },
 
-  seleccionarArchivo: {
-    url: { type: String },
-    public_id: { type: String},
-    nombre: { type: String},
-  },
+    seleccionarArchivo: {
+        url: { type: String },
+        public_id: { type: String },
+        nombre: { type: String },
+    },
 });
 
 const Juicio = mongoose.model("juicio", juicioSchema);

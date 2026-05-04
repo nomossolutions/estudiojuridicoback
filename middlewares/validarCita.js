@@ -11,13 +11,16 @@ const validacionCita = [
     .withMessage("La fecha de la cita es obligatoria")
     .custom((valor) => {
         const fecha = new Date(valor);
-         const day = fecha.getDay();
-         if(day <1  || day>5  ){
+        if (isNaN(fecha)) {
+            throw new Error("La fecha no es válida");
+        }
+        const day = fecha.getDay();
+        if(day < 1 || day > 5){
             throw new Error(
                 `El dia ${fecha.toDateString()} no es un dia habil`
             );
-         }
-         return true;
+        }
+        return true;
     }),
     body("hora")
     .notEmpty()
@@ -79,8 +82,7 @@ const validacionCita = [
 
         if(existe){
             throw new Error(
-                `El abogado ${req.abogNombre} ya tiene una ccita registrada el ${req.body.fecha} a la hora
-                ${req.body.hora}`
+                `El abogado ${req.abogNombre} ya tiene una cita registrada el ${req.body.fecha} a la hora ${req.body.hora}`
             )
         }
         return true;

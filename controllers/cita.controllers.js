@@ -12,7 +12,7 @@ export const crearCita = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      mensaje: "Error al crear la cita",
+      message: "Error al crear la cita",
     });
   }
 };
@@ -54,7 +54,7 @@ export const listarCita = async (req, res) => {
     res.status(200).json(citaTransformada);
   } catch (error) {
     console.error("Error en listarCita:", error);
-    res.status(500).json({ mensaje: "Error al obtener las citas" });
+    res.status(500).json({ message: "Error al obtener las citas" });
   }
 };
 
@@ -65,12 +65,12 @@ export const listarCitaId = async (req, res) => {
       "nombre apellido role"
     );
     if (!listarCitaId) {
-      return res.status(404).json({ mensaje: "La cita con ese ID no existe" });
+      return res.status(404).json({ message: "La cita con ese ID no existe" });
     }
     res.status(200).json(listarCitaId);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: "Error al obtener la cita por ID" });
+    res.status(500).json({ message: "Error al obtener la cita por ID" });
   }
 };
 
@@ -78,12 +78,12 @@ export const borrarCitaId = async (req, res) => {
   try {
     const citaBorrada = await Cita.findByIdAndDelete(req.params.id);
     if (!citaBorrada) {
-      return res.status(404).json({ mensaje: "La cita con ese ID no existe" });
+      return res.status(404).json({ message: "La cita con ese ID no existe" });
     }
-    res.status(200).json({ mensaje: "La cita fue borrada con éxito" });
+    res.status(200).json({ message: "La cita fue borrada con éxito" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: "Error al borrar la cita por ID " });
+    res.status(500).json({ message: "Error al borrar la cita por ID " });
   }
 };
 
@@ -91,13 +91,14 @@ export const editarCitaId = async (req, res) => {
   try {
     const citaEditada = await Cita.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
+      runValidators: true,
     }).populate("abogado", "nombre apellido role");
     if (!citaEditada) {
-      return res.status(404).json({ mensaje: "La cita con ese ID no existe" });
+      return res.status(404).json({ message: "La cita con ese ID no existe" });
     }
     res.status(200).json(citaEditada);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: "Erorr al actualizar la cita por ID" });
+    res.status(500).json({ message: "Error al actualizar la cita por ID" });
   }
 };

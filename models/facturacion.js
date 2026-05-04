@@ -27,11 +27,11 @@ const facturacionSchema = new mongoose.Schema({
     maxLength: 50,
     minLength: 15,
   },
-  
+
   seleccionarArchivo: {
     url: { type: String },
-    public_id: { type: String},
-    nombre: { type: String},
+    public_id: { type: String },
+    nombre: { type: String },
   },
   monto: {
     type: Number,

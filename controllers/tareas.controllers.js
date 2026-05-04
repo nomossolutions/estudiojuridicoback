@@ -20,7 +20,7 @@ export const crearTarea = async (req, res) => {
     console.log("Body recibido en POST:", req.body);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: "Erorr en el servidor al crear la tarea" });
+    res.status(500).json({ message: "Error en el servidor al crear la tarea" });
   }
 };
 
@@ -114,7 +114,7 @@ export const actualizarTareaPorID = async (req, res) => {
     const tareaActualizada = await Tarea.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidators: true }
     ).populate("abogado", "nombre apellido role");
     if (!tareaActualizada) {
       return res

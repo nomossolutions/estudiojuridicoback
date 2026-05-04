@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import bcrypt from "bcrypt";
 
 const usuarioSchema = new Schema({
   nombre: {
@@ -27,7 +28,7 @@ const usuarioSchema = new Schema({
     required: [true, "El teléfono es obligatorio"],
     match: [/^\d+$/, "El número de teléfono no es válido"],
   },
-  formBasicPassword: {
+  password: {
     type: String,
     required: true
   },
@@ -36,6 +37,12 @@ const usuarioSchema = new Schema({
     required: [true, "El rol es obligatorio"],
     enum: ["admin", "secre", "abog"],
   },
+});
+
+usuarioSchema.pre('save', async function() {
+  if (!this.isModified('password')) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
 const Usuario = mongoose.model("usuario", usuarioSchema);

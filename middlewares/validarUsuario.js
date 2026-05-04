@@ -42,7 +42,7 @@ const validacionUsuario = [
     .withMessage("Solo se permiten números")
     .isLength({ min: 7, max: 15 })
     .withMessage("El teléfono debe tener entre 7 y 15 dígitos"),
-  body("formBasicPassword")
+  body("password")
     .if((value, { req }) => req.method === "POST")
     .notEmpty()
     .withMessage("La contraseña del usuario es obligatoria")
@@ -50,7 +50,7 @@ const validacionUsuario = [
       /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$/
     )
     .withMessage(
-      "La contrasela debe incluir mayúsculas, minúsculas, número y carácteres especiales y tener entre 8 a 16 caracteres"
+      "La contraseña debe incluir mayúsculas, minúsculas, número y carácteres especiales y tener entre 8 a 16 caracteres"
     ),
   body("role")
     .notEmpty()

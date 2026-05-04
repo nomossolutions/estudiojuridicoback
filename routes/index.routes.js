@@ -16,5 +16,4 @@ router.use("/tarea", tareaRouter);
 router.use("/facturacion", facturacionRouter);
 router.use("/juicios", juicioRouter);
 
-
 export default router;
